@@ -7,14 +7,19 @@ import {
   HttpStatusCode,
 } from '@/data/protocols/http/http-response';
 
-export class HttpPostClientSpy implements HttpPostClient {
+export class HttpPostClientSpy<TRequestBody = unknown, TResponseBody = unknown>
+  implements HttpPostClient<TRequestBody, TResponseBody>
+{
   url?: string;
-  body?: object;
-  response: HttpResponse = {
+  body?: TRequestBody;
+  response: HttpResponse<TResponseBody> = {
     statusCode: HttpStatusCode.ok,
   };
 
-  async post({ url, body }: HttpPostClientArgs): Promise<HttpResponse> {
+  async post({
+    url,
+    body,
+  }: HttpPostClientArgs<TRequestBody>): Promise<HttpResponse<TResponseBody>> {
     this.url = url;
     this.body = body;
     return Promise.resolve(this.response);
