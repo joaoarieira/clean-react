@@ -1,11 +1,9 @@
 import {
-  HttpPostClient,
-  HttpPostClientArgs,
-} from '@/data/protocols/http/http-post-client';
-import {
   HttpResponse,
   HttpStatusCode,
-} from '@/data/protocols/http/http-response';
+  HttpPostClient,
+  HttpPostClientArgs,
+} from '@/data/protocols/http';
 
 export class HttpPostClientSpy<TRequestBody = unknown, TResponseBody = unknown>
   implements HttpPostClient<TRequestBody, TResponseBody>
