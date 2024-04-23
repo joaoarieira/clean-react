@@ -9,12 +9,14 @@
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:prettier/recommended",
-    "plugin:import/typescript"
+    "plugin:import/typescript",
+    "plugin:jest/recommended",
+    "plugin:jest/style"
   ],
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": ["react", "prettier", "react-hooks", "import"],
+  "plugins": ["react", "prettier", "react-hooks", "import", "jest"],
   "rules": {
     "react/jsx-filename-extension": [
       1,
@@ -25,32 +27,19 @@
     "react/react-in-jsx-scope": "off",
     "react/require-default-props": "off",
     "react/jsx-props-no-spreading": "off",
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      {
-        "js": "never",
-        "jsx": "never",
-        "ts": "never",
-        "tsx": "never"
-      }
-    ],
-    "import/prefer-default-export": "off",
-    "linebreak-style": 0,
-    "no-use-before-define": "off",
-    "no-shadow": "off",
-    "prettier/prettier": [
-      "warn",
-      {
-        "singleQuote": true,
-        "tabWidth": 2,
-        "trailingComma": "all"
-      }
-    ]
+    "jest/no-disabled-tests": "warn"
   },
   "settings": {
     "react": {
       "version": "detect"
+    },
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "import/no-unresolved": "error"
+      }
     }
   }
 }
