@@ -5,9 +5,11 @@ import {
 
 export class HttpPostClientSpy implements HttpPostClient {
   url?: string;
+  body?: object;
 
-  async post({ url }: HttpPostClientArgs): Promise<void> {
+  async post({ url, body }: HttpPostClientArgs): Promise<void> {
     this.url = url;
+    this.body = body;
     return Promise.resolve();
   }
 }
