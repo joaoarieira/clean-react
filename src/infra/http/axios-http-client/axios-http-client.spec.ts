@@ -15,10 +15,10 @@ const makePostRequest = (): HttpPostArgs => ({
 });
 
 describe('AxiosHttpClient', () => {
-  test('should call axios with correct URL and verb', async () => {
+  test('should call axios with correct args', async () => {
     const sut = makeSut();
     const request = makePostRequest();
     await sut.post(request);
-    expect(axios.post).toHaveBeenCalledWith(request.url);
+    expect(axios.post).toHaveBeenCalledWith(request.url, request.body);
   });
 });
