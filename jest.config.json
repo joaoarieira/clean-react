@@ -1,13 +1,13 @@
 {
   "roots": ["<rootDir>/src"],
   "preset": "ts-jest",
-  "testEnvironment": "node",
+  "testEnvironment": "jsdom",
   "collectCoverageFrom": [
     "<rootDir>/src/**/*.{ts,tsx}"
   ],
   "coverageDirectory": "coverage",
   "transform": {
-    ".+\\.ts$": "ts-jest"
+    ".+\\.(ts|tsx)$": "ts-jest"
   },
   "moduleNameMapper": {
     "@/(.*)": "<rootDir>/src/$1"

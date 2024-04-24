@@ -4,6 +4,7 @@
     "es2021": true
   },
   "extends": [
+    "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-type-checked",
     "plugin:react/recommended",
@@ -13,14 +14,27 @@
     "plugin:jest/recommended",
     "plugin:jest/style"
   ],
+  "ignorePatterns": ["dist", ".eslintrc.json"],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": ["react", "prettier", "react-hooks", "import", "jest"],
+  "plugins": [
+    "react",
+    "prettier",
+    "react-hooks",
+    "import",
+    "jest",
+    "react-refresh"
+  ],
   "overrides": [
     {
-      "files": ["*.spec.ts"],
-      "plugins": ["jest"],
+      "files": [
+        "*.spec.ts"
+      ],
+      "plugins": [
+        "jest"
+      ],
       "rules": {
         "@typescript-eslint/unbound-method": "off",
         "jest/unbound-method": "error"
@@ -31,12 +45,25 @@
     "react/jsx-filename-extension": [
       1,
       {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
       }
     ],
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
     "react/react-in-jsx-scope": "off",
     "react/require-default-props": "off",
     "react/jsx-props-no-spreading": "off",
+    "react-refresh/only-export-components": [
+      "warn",
+      {
+        "allowConstantExport": true
+      }
+    ],
     "prettier/prettier": "warn",
     "@typescript-eslint/unbound-method": "error"
   },
@@ -45,7 +72,10 @@
       "version": "detect"
     },
     "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"]
+      "@typescript-eslint/parser": [
+        ".ts",
+        ".tsx"
+      ]
     },
     "import/resolver": {
       "typescript": {
