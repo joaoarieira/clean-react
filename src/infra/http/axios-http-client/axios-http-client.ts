@@ -3,6 +3,6 @@ import axios from 'axios';
 
 export class AxiosHttpClient<TRequestBody = unknown> {
   async post({ url }: HttpPostArgs<TRequestBody>) {
-    return axios(url);
+    return axios.post(url);
   }
 }
