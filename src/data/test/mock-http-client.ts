@@ -2,7 +2,7 @@ import {
   HttpResponse,
   HttpStatusCode,
   HttpPostClient,
-  HttpPostClientArgs,
+  HttpPostArgs,
 } from '@/data/protocols/http';
 
 export class HttpPostClientSpy<TRequestBody = unknown, TResponseBody = unknown>
@@ -17,7 +17,7 @@ export class HttpPostClientSpy<TRequestBody = unknown, TResponseBody = unknown>
   async post({
     url,
     body,
-  }: HttpPostClientArgs<TRequestBody>): Promise<HttpResponse<TResponseBody>> {
+  }: HttpPostArgs<TRequestBody>): Promise<HttpResponse<TResponseBody>> {
     this.url = url;
     this.body = body;
     return Promise.resolve(this.response);
