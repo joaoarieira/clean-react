@@ -1,8 +1,8 @@
-import { Spinner } from '@/presentation/components/spinner';
 import Styles from './styles.module.scss';
 import { LoginHeader } from '@/presentation/components/login-header';
 import { Footer } from '@/presentation/components/footer';
 import { Input } from '@/presentation/components/input';
+import { FormStatus } from '@/presentation/components/form-status';
 
 export function Login() {
   return (
@@ -22,10 +22,7 @@ export function Login() {
 
         <span className={Styles.link}>Criar conta</span>
 
-        <div className={Styles['error-wrap']}>
-          <Spinner className={Styles.spinner} />
-          <span className={Styles.error}>Erro</span>
-        </div>
+        <FormStatus />
       </form>
 
       <Footer />
