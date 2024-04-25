@@ -26,6 +26,11 @@
 
     .submit {
       margin-top: 0.5rem;
+
+      &:disabled {
+        background-color: $disabled-background;
+        color: $disabled-background-contrast-text;
+      }
     }
 
     .new-account {

@@ -24,7 +24,7 @@ export function Login() {
             placeholder="Digite sua senha"
           />
 
-          <button type="submit" className={Styles.submit}>
+          <button type="submit" disabled className={Styles.submit}>
             Entrar
           </button>
 
