@@ -22,7 +22,7 @@ export function Login() {
           Entrar
         </button>
 
-        <span className={Styles.link}>Criar conta</span>
+        <span className={Styles['new-account']}>Criar conta</span>
 
         <FormStatus />
       </form>
