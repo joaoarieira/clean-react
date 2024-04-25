@@ -16,4 +16,12 @@ describe('Login', () => {
     const loadingSpinnerComponent = screen.queryByTestId('form-status-loading');
     expect(loadingSpinnerComponent).toBeNull();
   });
+
+  test('should have submit button disabled when mounting', () => {
+    render(<Login />);
+    const submitButton = screen.getByRole<HTMLButtonElement>('button', {
+      name: 'Entrar',
+    });
+    expect(submitButton.disabled).toBe(true);
+  });
 });
