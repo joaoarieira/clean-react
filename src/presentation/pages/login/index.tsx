@@ -1,11 +1,12 @@
 import { Spinner } from '@/presentation/components/spinner';
 import Styles from './styles.module.scss';
+import { Logo } from '@/presentation/components/logo';
 
 export function Login() {
   return (
     <div className={Styles.login}>
       <header className={Styles.header}>
-        <img src="/public/logo.svg" alt="Logo" />
+        <Logo />
         <h1>4Dev - Enquetes para Programadores</h1>
       </header>
 
