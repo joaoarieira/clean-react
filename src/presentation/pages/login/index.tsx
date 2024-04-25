@@ -1,3 +1,4 @@
+import { FormContextProvider } from '@/contexts/form/form-context';
 import Styles from './styles.module.scss';
 import {
   Footer,
@@ -11,21 +12,27 @@ export function Login() {
     <div className={Styles.login}>
       <LoginHeader />
 
-      <form className={Styles.form}>
-        <h2>Login</h2>
+      <FormContextProvider>
+        <form className={Styles.form}>
+          <h2>Login</h2>
 
-        <Input type="email" name="email" placeholder="Digite seu e-mail" />
+          <Input type="email" name="email" placeholder="Digite seu e-mail" />
 
-        <Input type="password" name="password" placeholder="Digite sua senha" />
+          <Input
+            type="password"
+            name="password"
+            placeholder="Digite sua senha"
+          />
 
-        <button type="submit" className={Styles.submit}>
-          Entrar
-        </button>
+          <button type="submit" className={Styles.submit}>
+            Entrar
+          </button>
 
-        <span className={Styles['new-account']}>Criar conta</span>
+          <span className={Styles['new-account']}>Criar conta</span>
 
-        <FormStatus />
-      </form>
+          <FormStatus />
+        </form>
+      </FormContextProvider>
 
       <Footer />
     </div>
