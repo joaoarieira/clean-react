@@ -4,12 +4,25 @@ type FormContextProviderProps = {
   children: React.ReactNode;
 };
 
-type IFormContextState = {
-  isLoading: boolean;
-  errorMessage: string;
+type IErrorState = {
+  message: string;
+  label?: string;
 };
 
-const defaultValues: IFormContextState = { isLoading: false, errorMessage: '' };
+type IFormContextState = {
+  isLoading: boolean;
+  isValid: boolean;
+  errors: Record<string, IErrorState>;
+};
+
+const defaultValues: IFormContextState = {
+  isLoading: false,
+  isValid: true,
+  errors: {
+    email: { label: 'E-mail', message: 'campo obrigatório' },
+    password: { label: 'Senha', message: 'campo obrigatório' },
+  },
+};
 
 export const FormContext = createContext<IFormContextState>(defaultValues);
 
@@ -18,10 +31,11 @@ export const FormContextProvider = ({ children }: FormContextProviderProps) => {
 
   const memoizedContextValue: IFormContextState = useMemo(
     () => ({
-      errorMessage: state.errorMessage,
       isLoading: state.isLoading,
+      isValid: true,
+      errors: state.errors,
     }),
-    [state.errorMessage, state.isLoading],
+    [state.isLoading, state.errors],
   );
 
   return (
