@@ -1,0 +1,18 @@
+@import "/src/presentation/styles/colors.module";
+
+.header {
+  display: flex;
+  flex-direction: column;
+  border-top: 2.5rem solid $primary-dark;
+  background-color: $primary;
+  align-items: center;
+
+  img {
+    margin-top: 2.5rem;
+  }
+
+  h1 {
+    color: $primary-contrast-text;
+    margin: 1rem 0 2.5rem;
+  }
+}

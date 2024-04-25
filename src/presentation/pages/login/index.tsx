@@ -1,14 +1,12 @@
 import { Spinner } from '@/presentation/components/spinner';
 import Styles from './styles.module.scss';
-import { Logo } from '@/presentation/components/logo';
+import { LoginHeader } from '@/presentation/components/login-header';
+import { Footer } from '@/presentation/components/footer';
 
 export function Login() {
   return (
     <div className={Styles.login}>
-      <header className={Styles.header}>
-        <Logo />
-        <h1>4Dev - Enquetes para Programadores</h1>
-      </header>
+      <LoginHeader />
 
       <form className={Styles.form}>
         <h2>Login</h2>
@@ -39,7 +37,7 @@ export function Login() {
         </div>
       </form>
 
-      <footer className={Styles.footer}>footer</footer>
+      <Footer />
     </div>
   );
 }
