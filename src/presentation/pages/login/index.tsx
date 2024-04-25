@@ -2,6 +2,7 @@ import { Spinner } from '@/presentation/components/spinner';
 import Styles from './styles.module.scss';
 import { LoginHeader } from '@/presentation/components/login-header';
 import { Footer } from '@/presentation/components/footer';
+import { Input } from '@/presentation/components/input';
 
 export function Login() {
   return (
@@ -11,19 +12,9 @@ export function Login() {
       <form className={Styles.form}>
         <h2>Login</h2>
 
-        <div className={Styles['input-wrapper']}>
-          <input type="email" name="email" placeholder="Digite seu e-mail" />
-          <span className={Styles.status}>🔴</span>
-        </div>
+        <Input type="email" name="email" placeholder="Digite seu e-mail" />
 
-        <div className={Styles['input-wrapper']}>
-          <input
-            type="password"
-            name="password"
-            placeholder="Digite sua senha"
-          />
-          <span className={Styles.status}>🔴</span>
-        </div>
+        <Input type="password" name="password" placeholder="Digite sua senha" />
 
         <button type="submit" className={Styles.submit}>
           Entrar
