@@ -1,8 +1,10 @@
 import Styles from './styles.module.scss';
-import { LoginHeader } from '@/presentation/components/login-header';
-import { Footer } from '@/presentation/components/footer';
-import { Input } from '@/presentation/components/input';
-import { FormStatus } from '@/presentation/components/form-status';
+import {
+  Footer,
+  FormStatus,
+  Input,
+  LoginHeader,
+} from '@/presentation/components';
 
 export function Login() {
   return (

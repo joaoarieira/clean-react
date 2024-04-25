@@ -1,4 +1,4 @@
-import { Logo } from '@/presentation/components/logo';
+import { Logo } from '@/presentation/components';
 import Styles from './styles.module.scss';
 import { memo } from 'react';
 

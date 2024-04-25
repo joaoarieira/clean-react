@@ -1,5 +1,5 @@
 import Styles from './styles.module.scss';
-import { Spinner } from '@/presentation/components/spinner';
+import { Spinner } from '@/presentation/components';
 
 export function FormStatus() {
   return (
