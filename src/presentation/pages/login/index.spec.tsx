@@ -115,4 +115,17 @@ describe('Login', () => {
     expect(passwordStatus.title).toBe(validationSpy.errorMessage);
     expect(passwordStatus.textContent).toBe('🔴');
   });
+
+  test('should show password success if Validation succeeds', async () => {
+    const { sut, user } = makeSut({ errorMessage: null });
+    const passwordInput =
+      sut.getByPlaceholderText<HTMLInputElement>('Digite sua senha');
+
+    await user.type(passwordInput, faker.internet.password());
+    const passwordStatus =
+      await sut.findByTestId<HTMLSpanElement>('password-status');
+
+    expect(passwordStatus.title).toBe('Tudo certo!');
+    expect(passwordStatus.textContent).toBe('🟢');
+  });
 });
