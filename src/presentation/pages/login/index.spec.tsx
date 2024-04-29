@@ -1,20 +1,8 @@
 import { Login } from '@/presentation/pages/login';
-import { Validation } from '@/presentation/protocols/validation';
+import { ValidationSpy } from '@/presentation/test/mock-validation';
 import { faker } from '@faker-js/faker';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-
-class ValidationSpy implements Validation {
-  errorMessage: string | undefined;
-  fieldName: string | undefined;
-  fieldValue: unknown;
-
-  validate(fieldName: string, fieldValue: unknown): string | undefined {
-    this.fieldName = fieldName;
-    this.fieldValue = fieldValue;
-    return this.errorMessage;
-  }
-}
 
 const makeSut = () => {
   const validationSpy = new ValidationSpy();
