@@ -1,3 +1,6 @@
+import { AccountModel } from '@/domain/models';
+import { mockAccountModel } from '@/domain/test';
+import { Authentication, AuthenticationArgs } from '@/domain/usecases';
 import { Login } from '@/presentation/pages/login';
 import { ValidationSpy } from '@/presentation/test/mock-validation';
 import { faker } from '@faker-js/faker';
@@ -13,17 +16,31 @@ type MakeSutArgs = {
   validationError?: string;
 };
 
+class AuthenticationSpy implements Authentication {
+  accountModel = mockAccountModel();
+  args?: AuthenticationArgs;
+
+  auth(args: AuthenticationArgs): Promise<AccountModel> {
+    this.args = args;
+    return Promise.resolve(this.accountModel);
+  }
+}
+
 const makeSut = (args?: MakeSutArgs) => {
   const validationSpy = new ValidationSpy();
   validationSpy.errorMessage = args?.validationError;
+  const authenticationSpy = new AuthenticationSpy();
   const user = userEvent.setup();
-  const renderResult = render(<Login validation={validationSpy} />);
+  const renderResult = render(
+    <Login validation={validationSpy} authentication={authenticationSpy} />,
+  );
 
   return {
     sut: screen,
     user,
     renderResult,
     validationSpy,
+    authenticationSpy,
   };
 };
 
@@ -177,5 +194,28 @@ describe('Login', () => {
     );
 
     expect(loadingSpinnerComponent).not.toBeNull();
+  });
+
+  test('should call Authentication with correct values', async () => {
+    const { sut, user, authenticationSpy } = makeSut();
+    const emailInput = sut.getByRole<HTMLInputElement>('textbox', {
+      name: 'E-mail',
+    });
+    const passwordInput =
+      sut.getByPlaceholderText<HTMLInputElement>('Digite sua senha');
+    const submitButton = sut.getByRole<HTMLButtonElement>('button', {
+      name: 'Entrar',
+    });
+    const emailValue = faker.internet.email();
+    const passwordValue = faker.internet.password();
+
+    await user.type(emailInput, emailValue);
+    await user.type(passwordInput, passwordValue);
+    await user.click(submitButton);
+
+    expect(authenticationSpy.args).toEqual({
+      email: emailValue,
+      password: passwordValue,
+    });
   });
 });
