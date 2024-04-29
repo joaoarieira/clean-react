@@ -141,4 +141,21 @@ describe('Login', () => {
     expect(passwordStatus.title).toBe('Tudo certo!');
     expect(passwordStatus.textContent).toBe('🟢');
   });
+
+  test('should enable the submit button if credentials are valid', async () => {
+    const { sut, user } = makeSut({ errorMessage: null });
+    const emailInput = sut.getByRole<HTMLInputElement>('textbox', {
+      name: 'E-mail',
+    });
+    const passwordInput =
+      sut.getByPlaceholderText<HTMLInputElement>('Digite sua senha');
+    const submitButton = sut.getByRole<HTMLButtonElement>('button', {
+      name: 'Entrar',
+    });
+
+    await user.type(emailInput, faker.internet.email());
+    await user.type(passwordInput, faker.internet.password());
+
+    expect(submitButton.disabled).toBe(false);
+  });
 });
