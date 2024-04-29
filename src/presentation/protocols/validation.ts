@@ -1,3 +1,3 @@
-export interface Validation<TInput = unknown> {
-  validate(input: TInput): string;
+export interface Validation {
+  validate(fieldName: string, fieldValue: unknown): string | undefined;
 }

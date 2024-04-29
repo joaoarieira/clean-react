@@ -5,11 +5,13 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 class ValidationSpy implements Validation {
-  errorMessage: string = '';
-  input: unknown;
+  errorMessage: string | undefined;
+  fieldName: string | undefined;
+  fieldValue: unknown;
 
-  validate(input: unknown): string {
-    this.input = input;
+  validate(fieldName: string, fieldValue: unknown): string | undefined {
+    this.fieldName = fieldName;
+    this.fieldValue = fieldValue;
     return this.errorMessage;
   }
 }
@@ -68,9 +70,7 @@ describe('Login', () => {
 
     await user.type(emailInput, emailValue);
 
-    expect(validationSpy.input).toEqual({
-      email: emailValue,
-    });
+    expect(validationSpy.fieldValue).toEqual(emailValue);
   });
 
   test('should call Validation with correct password', async () => {
@@ -81,8 +81,6 @@ describe('Login', () => {
 
     await user.type(passwordInput, passwordValue);
 
-    expect(validationSpy.input).toEqual({
-      password: passwordValue,
-    });
+    expect(validationSpy.fieldValue).toEqual(passwordValue);
   });
 });

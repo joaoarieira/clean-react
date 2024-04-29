@@ -27,16 +27,12 @@ export function Login({ validation }: Props) {
   });
 
   useEffect(() => {
-    validation?.validate({
-      email: loginForm.values['email'],
-    });
+    validation?.validate('email', loginForm.values['email']);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loginForm.values['email']]);
 
   useEffect(() => {
-    validation?.validate({
-      password: loginForm.values['password'],
-    });
+    validation?.validate('password', loginForm.values['password']);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loginForm.values['password']]);
 
