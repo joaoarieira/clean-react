@@ -33,6 +33,13 @@ export function Login({ validation }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loginForm.values['email']]);
 
+  useEffect(() => {
+    validation?.validate({
+      password: loginForm.values['password'],
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loginForm.values['password']]);
+
   return (
     <div className={Styles.login}>
       <LoginHeader />
