@@ -8,7 +8,12 @@ export function AppRoutes() {
     <BrowserRouter>
       <Routes>
         <Route path="/">
-          <Route index element={<Login validation={{} as never} />} />
+          <Route
+            index
+            element={
+              <Login validation={{} as never} authentication={{} as never} />
+            }
+          />
 
           {/* 
           <Route path="route/">

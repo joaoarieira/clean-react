@@ -9,13 +9,15 @@ import {
 import { useForm } from '@/presentation/contexts/form/use-form';
 import { Validation } from '@/presentation/protocols/validation';
 import { useEffect } from 'react';
+import { Authentication } from '@/domain/usecases';
 
 type Props = {
   validation: Validation;
+  authentication: Authentication;
 };
 
-export function Login({ validation }: Props) {
-  if (validation) {
+export function Login({ validation, authentication }: Props) {
+  if (validation || authentication) {
     // TODO: REMOVER
     // existe só pra fazer o Typescript parar de reclamar
   }
@@ -29,6 +31,10 @@ export function Login({ validation }: Props) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     loginForm.setIsLoading(true);
+    void authentication.auth({
+      email: loginForm.values.email as string,
+      password: loginForm.values.password as string,
+    });
   };
 
   useEffect(() => {
