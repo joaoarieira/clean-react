@@ -20,14 +20,14 @@ export function Login({ validation }: Props) {
     // existe só pra fazer o Typescript parar de reclamar
   }
 
-  const loginForm = useForm({
-    defaultState: {
-      errors: { email: 'campo obrigatório', password: 'campo obrigatório' },
-    },
-  });
+  const loginForm = useForm();
 
   useEffect(() => {
-    validation?.validate('email', loginForm.values['email']);
+    const emailErrorOrUndefined = validation.validate(
+      'email',
+      loginForm.values['email'],
+    );
+    loginForm.setFieldErrorMessage('email', emailErrorOrUndefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loginForm.values['email']]);
 
@@ -54,7 +54,7 @@ export function Login({ validation }: Props) {
           <Input
             type="password"
             name="password"
-            label="a Senha dele"
+            label="Senha"
             placeholder="Digite sua senha"
           />
 

@@ -14,6 +14,7 @@ export type UseFormReturn = {
   setValue: (name: string, value: unknown) => void;
   getIsFieldErroed: (name: string) => boolean;
   getFieldErrorMessage: (name: string) => string | undefined;
+  setFieldErrorMessage: (name: string, message: string | undefined) => void;
 };
 
 type UseFormProps = {
@@ -38,6 +39,25 @@ export function useForm(props?: UseFormProps): UseFormReturn {
     });
   }, []);
 
+  const setFieldErrorMessage = useCallback(
+    (name: string, message: string | undefined) => {
+      setState((oldState) => {
+        if (message === undefined) {
+          if (oldState.errors) {
+            delete oldState.errors[name];
+          }
+          return oldState;
+        }
+        const newState = {
+          ...oldState,
+          errors: { ...oldState.errors, [name]: message },
+        };
+        return newState;
+      });
+    },
+    [],
+  );
+
   const getIsFieldErroed = useCallback(
     (name: string) =>
       name != null && state.errors != null && state.errors[name] != null,
@@ -58,6 +78,7 @@ export function useForm(props?: UseFormProps): UseFormReturn {
     errors: state.errors,
     setValue,
     setState,
+    setFieldErrorMessage,
     getIsFieldErroed,
     getFieldErrorMessage,
   };
