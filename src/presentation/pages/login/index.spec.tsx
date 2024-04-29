@@ -4,8 +4,24 @@ import { faker } from '@faker-js/faker';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-const makeSut = () => {
+type MakeSutArgs = {
+  /**
+   * `string`: mensagem de erro manual.
+   *
+   * `undefined`: gera mensagem de erro automaticamente.
+   *
+   * `null`: sem mensagem de erro.
+   */
+  errorMessage?: string | null;
+};
+
+const makeSut = (args?: MakeSutArgs) => {
   const validationSpy = new ValidationSpy();
+  const errorMessage =
+    args?.errorMessage !== null
+      ? faker.lorem.sentence({ min: 1, max: 10 })
+      : undefined;
+  validationSpy.errorMessage = errorMessage;
   const user = userEvent.setup();
   const renderResult = render(<Login validation={validationSpy} />);
 
@@ -18,8 +34,10 @@ const makeSut = () => {
 };
 
 describe('Login', () => {
-  test.skip('should not show error message when mounting', () => {
-    const { sut } = makeSut();
+  test('should not show error message when mounting', () => {
+    const { sut } = makeSut({
+      errorMessage: null,
+    });
     const errorMessageComponent = sut.queryByTestId('form-status-error');
 
     expect(errorMessageComponent).toBeNull();
@@ -42,11 +60,11 @@ describe('Login', () => {
   });
 
   test('should have its email field status indicator advising that it is required', () => {
-    const { sut } = makeSut();
+    const { sut, validationSpy } = makeSut();
     const statusComponent = sut.getByTestId<HTMLSpanElement>('email-status');
 
     expect(statusComponent.textContent).toBe('🔴');
-    expect(statusComponent.title).toMatch(/campo obrigatório/i);
+    expect(statusComponent.title).toBe(validationSpy.errorMessage);
   });
 
   test('should call Validation with correct email', async () => {
@@ -70,5 +88,18 @@ describe('Login', () => {
     await user.type(passwordInput, passwordValue);
 
     expect(validationSpy.fieldValue).toEqual(passwordValue);
+  });
+
+  test('should show email error if Validation fails', async () => {
+    const { sut, validationSpy, user } = makeSut();
+    const emailInput = sut.getByRole<HTMLInputElement>('textbox', {
+      name: 'E-mail',
+    });
+
+    await user.type(emailInput, faker.internet.email());
+    const emailStatus = await sut.findByTestId<HTMLSpanElement>('email-status');
+
+    expect(emailStatus.title).toBe(validationSpy.errorMessage);
+    expect(emailStatus.textContent).toBe('🔴');
   });
 });
