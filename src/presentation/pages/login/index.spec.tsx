@@ -116,6 +116,19 @@ describe('Login', () => {
     expect(passwordStatus.textContent).toBe('🔴');
   });
 
+  test('should show email success if Validation succeeds', async () => {
+    const { sut, user } = makeSut({ errorMessage: null });
+    const emailInput = sut.getByRole<HTMLInputElement>('textbox', {
+      name: 'E-mail',
+    });
+
+    await user.type(emailInput, faker.internet.email());
+    const emailStatus = await sut.findByTestId<HTMLSpanElement>('email-status');
+
+    expect(emailStatus.title).toBe('Tudo certo!');
+    expect(emailStatus.textContent).toBe('🟢');
+  });
+
   test('should show password success if Validation succeeds', async () => {
     const { sut, user } = makeSut({ errorMessage: null });
     const passwordInput =
