@@ -8,20 +8,14 @@ type MakeSutArgs = {
   /**
    * `string`: mensagem de erro manual.
    *
-   * `undefined`: gera mensagem de erro automaticamente.
-   *
-   * `null`: sem mensagem de erro.
+   * `undefined`: sem mensagem de erro.
    */
-  errorMessage?: string | null;
+  validationError?: string;
 };
 
 const makeSut = (args?: MakeSutArgs) => {
   const validationSpy = new ValidationSpy();
-  const errorMessage =
-    args?.errorMessage !== null
-      ? faker.lorem.sentence({ min: 1, max: 10 })
-      : undefined;
-  validationSpy.errorMessage = errorMessage;
+  validationSpy.errorMessage = args?.validationError;
   const user = userEvent.setup();
   const renderResult = render(<Login validation={validationSpy} />);
 
@@ -35,9 +29,7 @@ const makeSut = (args?: MakeSutArgs) => {
 
 describe('Login', () => {
   test('should not show error message when mounting', () => {
-    const { sut } = makeSut({
-      errorMessage: null,
-    });
+    const { sut } = makeSut();
     const errorMessageComponent = sut.queryByTestId('form-status-error');
 
     expect(errorMessageComponent).toBeNull();
@@ -51,7 +43,7 @@ describe('Login', () => {
   });
 
   test('should have submit button disabled when mounting', () => {
-    const { sut } = makeSut();
+    const { sut } = makeSut({ validationError: faker.lorem.sentence() });
     const submitButton = sut.getByRole<HTMLButtonElement>('button', {
       name: 'Entrar',
     });
@@ -60,7 +52,9 @@ describe('Login', () => {
   });
 
   test('should have its email field status indicator advising that it is required', () => {
-    const { sut, validationSpy } = makeSut();
+    const { sut, validationSpy } = makeSut({
+      validationError: faker.lorem.sentence(),
+    });
     const statusComponent = sut.getByTestId<HTMLSpanElement>('email-status');
 
     expect(statusComponent.textContent).toBe('🔴');
@@ -91,7 +85,9 @@ describe('Login', () => {
   });
 
   test('should show email error if Validation fails', async () => {
-    const { sut, validationSpy, user } = makeSut();
+    const { sut, validationSpy, user } = makeSut({
+      validationError: faker.lorem.sentence(),
+    });
     const emailInput = sut.getByRole<HTMLInputElement>('textbox', {
       name: 'E-mail',
     });
@@ -104,7 +100,9 @@ describe('Login', () => {
   });
 
   test('should show password error if Validation fails', async () => {
-    const { sut, validationSpy, user } = makeSut();
+    const { sut, validationSpy, user } = makeSut({
+      validationError: faker.lorem.sentence(),
+    });
     const passwordInput =
       sut.getByPlaceholderText<HTMLInputElement>('Digite sua senha');
 
@@ -117,7 +115,7 @@ describe('Login', () => {
   });
 
   test('should show email success if Validation succeeds', async () => {
-    const { sut, user } = makeSut({ errorMessage: null });
+    const { sut, user } = makeSut();
     const emailInput = sut.getByRole<HTMLInputElement>('textbox', {
       name: 'E-mail',
     });
@@ -130,7 +128,7 @@ describe('Login', () => {
   });
 
   test('should show password success if Validation succeeds', async () => {
-    const { sut, user } = makeSut({ errorMessage: null });
+    const { sut, user } = makeSut();
     const passwordInput =
       sut.getByPlaceholderText<HTMLInputElement>('Digite sua senha');
 
@@ -143,7 +141,7 @@ describe('Login', () => {
   });
 
   test('should enable the submit button if credentials are valid', async () => {
-    const { sut, user } = makeSut({ errorMessage: null });
+    const { sut, user } = makeSut();
     const emailInput = sut.getByRole<HTMLInputElement>('textbox', {
       name: 'E-mail',
     });
