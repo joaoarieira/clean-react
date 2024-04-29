@@ -1,6 +1,6 @@
 import { useFormContext } from '@/presentation/contexts/form/use-form-context';
 import Styles from './styles.module.scss';
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 
 type Props = {
   name: string;
@@ -11,23 +11,23 @@ type Props = {
 >;
 
 export function Input({ name, id, label, ...props }: Props) {
-  const { errors } = useFormContext();
+  const { setValue, getFieldErrorMessage } = useFormContext();
   const inputId = id ?? `${name}-input`;
-
-  const isErroed = useMemo(
-    () => name != null && errors[name] != null,
-    [errors, name],
-  );
-
-  const errorMessage = isErroed ? errors[name].message : '';
-
+  const errorMessage = getFieldErrorMessage(name);
   const statusIndicator = '🔴';
+
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setValue(name, event.target.value);
+    },
+    [name, setValue],
+  );
 
   return (
     <div className={Styles['input-wrapper']}>
       {label != null && <label htmlFor={inputId}>{label}</label>}
 
-      <input id={inputId} name={name} {...props} />
+      <input id={inputId} name={name} onChange={handleChange} {...props} />
 
       <span
         className={Styles.status}

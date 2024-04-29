@@ -1,46 +1,19 @@
-import { createContext, useMemo, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { UseFormReturn } from '@/presentation/contexts/form/use-form';
+import { createContext } from 'react';
 
 type FormContextProviderProps = {
   children: React.ReactNode;
-};
+} & UseFormReturn;
 
-type IErrorState = {
-  message: string;
-  label?: string;
-};
+type FormContextValue = UseFormReturn;
 
-type IFormContextState = {
-  isLoading: boolean;
-  isValid: boolean;
-  errors: Record<string, IErrorState>;
-};
+export const FormContext = createContext<FormContextValue>(null!);
 
-const defaultValues: IFormContextState = {
-  isLoading: false,
-  isValid: true,
-  errors: {
-    email: { label: 'E-mail', message: 'campo obrigatório' },
-    password: { label: 'Senha', message: 'campo obrigatório' },
-  },
-};
-
-export const FormContext = createContext<IFormContextState>(defaultValues);
-
-export const FormContextProvider = ({ children }: FormContextProviderProps) => {
-  const [state] = useState(defaultValues);
-
-  const memoizedContextValue: IFormContextState = useMemo(
-    () => ({
-      isLoading: state.isLoading,
-      isValid: true,
-      errors: state.errors,
-    }),
-    [state.isLoading, state.errors],
-  );
+export const FormContextProvider = (props: FormContextProviderProps) => {
+  const { children, ...formReturn } = props;
 
   return (
-    <FormContext.Provider value={memoizedContextValue}>
-      {children}
-    </FormContext.Provider>
+    <FormContext.Provider value={formReturn}>{children}</FormContext.Provider>
   );
 };

@@ -4,9 +4,9 @@ import { Spinner } from '@/presentation/components';
 import { useMemo } from 'react';
 
 export function FormStatus() {
-  const { isLoading, isValid, errors } = useFormContext();
+  const { isLoading, errors } = useFormContext();
 
-  const errorEntries = useMemo(() => Object.entries(errors), [errors]);
+  const errorEntries = useMemo(() => Object.entries(errors ?? {}), [errors]);
 
   return (
     <div className={Styles['error-wrap']}>
@@ -14,11 +14,11 @@ export function FormStatus() {
         <Spinner className={Styles.spinner} data-testid="form-status-loading" />
       )}
 
-      {!isValid && errorEntries.length && (
+      {errorEntries.length && (
         <ul className={Styles.error} data-testid="form-status-error">
           {errorEntries.map(([fieldName, fieldError]) => (
             <li key={fieldName}>
-              {fieldError.label}: {fieldError.message}
+              {fieldName}: {fieldError}
             </li>
           ))}
         </ul>

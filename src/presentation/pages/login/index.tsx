@@ -6,21 +6,34 @@ import {
   Input,
   LoginHeader,
 } from '@/presentation/components';
+import { useForm } from '@/presentation/contexts/form/use-form';
 
 export function Login() {
+  const loginForm = useForm({
+    defaultState: {
+      errors: { email: 'campo obrigatório', password: 'campo obrigatório' },
+    },
+  });
+
   return (
     <div className={Styles.login}>
       <LoginHeader />
 
-      <FormContextProvider>
+      <FormContextProvider {...loginForm}>
         <form className={Styles.form}>
           <h2>Login</h2>
 
-          <Input type="email" name="email" placeholder="Digite seu e-mail" />
+          <Input
+            type="email"
+            name="email"
+            label="E-mail"
+            placeholder="Digite seu e-mail"
+          />
 
           <Input
             type="password"
             name="password"
+            label="a Senha dele"
             placeholder="Digite sua senha"
           />
 
