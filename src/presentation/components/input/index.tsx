@@ -14,7 +14,8 @@ export function Input({ name, id, label, ...props }: Props) {
   const { setValue, getFieldErrorMessage } = useFormContext();
   const inputId = id ?? `${name}-input`;
   const errorMessage = getFieldErrorMessage(name);
-  const statusIndicator = '🔴';
+  const statusTitle = errorMessage ?? 'Tudo certo!';
+  const statusIndicator = errorMessage ? '🔴' : '🟢';
 
   const handleChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +32,7 @@ export function Input({ name, id, label, ...props }: Props) {
 
       <span
         className={Styles.status}
-        title={errorMessage}
+        title={statusTitle}
         data-testid={`${name}-status`}
       >
         {statusIndicator}
