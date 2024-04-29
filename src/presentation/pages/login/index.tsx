@@ -26,6 +26,11 @@ export function Login({ validation }: Props) {
   const isPasswordErroed = loginForm.getIsFieldErroed('password');
   const isSubmitDisabled = isEmailErroed || isPasswordErroed;
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    loginForm.setIsLoading(true);
+  };
+
   useEffect(() => {
     const emailErrorOrUndefined = validation.validate(
       'email',
@@ -49,7 +54,7 @@ export function Login({ validation }: Props) {
       <LoginHeader />
 
       <FormContextProvider {...loginForm}>
-        <form className={Styles.form}>
+        <form className={Styles.form} onSubmit={handleSubmit}>
           <h2>Login</h2>
 
           <Input

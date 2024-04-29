@@ -12,6 +12,7 @@ export type UseFormReturn = {
   errors: Record<string, string> | undefined;
   setState: React.Dispatch<React.SetStateAction<FormState>>;
   setValue: (name: string, value: unknown) => void;
+  setIsLoading: (isLoading: boolean) => void;
   getIsFieldErroed: (name: string) => boolean;
   getFieldErrorMessage: (name: string) => string | undefined;
   setFieldErrorMessage: (name: string, message: string | undefined) => void;
@@ -72,12 +73,20 @@ export function useForm(props?: UseFormProps): UseFormReturn {
     [getIsFieldErroed, state.errors],
   );
 
+  const setIsLoading = useCallback((isLoading: boolean) => {
+    setState((oldState) => ({
+      ...oldState,
+      isLoading,
+    }));
+  }, []);
+
   return {
     isLoading: state.isLoading,
     values: state.values,
     errors: state.errors,
     setValue,
     setState,
+    setIsLoading,
     setFieldErrorMessage,
     getIsFieldErroed,
     getFieldErrorMessage,
