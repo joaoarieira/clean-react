@@ -59,7 +59,7 @@ describe('Login', () => {
     expect(statusComponent.title).toMatch(/campo obrigatório/i);
   });
 
-  test('should call Validation with correct value', async () => {
+  test('should call Validation with correct email', async () => {
     const { sut, user, validationSpy } = makeSut();
     const emailInput = sut.getByRole<HTMLInputElement>('textbox', {
       name: 'E-mail',
@@ -70,6 +70,19 @@ describe('Login', () => {
 
     expect(validationSpy.input).toEqual({
       email: emailValue,
+    });
+  });
+
+  test('should call Validation with correct password', async () => {
+    const { sut, user, validationSpy } = makeSut();
+    const passwordInput =
+      sut.getByPlaceholderText<HTMLInputElement>('Digite sua senha');
+    const passwordValue = faker.internet.password();
+
+    await user.type(passwordInput, passwordValue);
+
+    expect(validationSpy.input).toEqual({
+      password: passwordValue,
     });
   });
 });
