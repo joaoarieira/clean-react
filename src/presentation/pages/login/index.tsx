@@ -22,6 +22,10 @@ export function Login({ validation }: Props) {
 
   const loginForm = useForm();
 
+  const isEmailErroed = loginForm.getIsFieldErroed('email');
+  const isPasswordErroed = loginForm.getIsFieldErroed('password');
+  const isSubmitDisabled = isEmailErroed || isPasswordErroed;
+
   useEffect(() => {
     const emailErrorOrUndefined = validation.validate(
       'email',
@@ -62,7 +66,11 @@ export function Login({ validation }: Props) {
             placeholder="Digite sua senha"
           />
 
-          <button type="submit" disabled className={Styles.submit}>
+          <button
+            type="submit"
+            disabled={isSubmitDisabled}
+            className={Styles.submit}
+          >
             Entrar
           </button>
 
