@@ -32,7 +32,11 @@ export function Login({ validation }: Props) {
   }, [loginForm.values['email']]);
 
   useEffect(() => {
-    validation?.validate('password', loginForm.values['password']);
+    const passwordErrorOrUndefined = validation?.validate(
+      'password',
+      loginForm.values['password'],
+    );
+    loginForm.setFieldErrorMessage('password', passwordErrorOrUndefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loginForm.values['password']]);
 
