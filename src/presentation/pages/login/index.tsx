@@ -7,13 +7,31 @@ import {
   LoginHeader,
 } from '@/presentation/components';
 import { useForm } from '@/presentation/contexts/form/use-form';
+import { Validation } from '@/presentation/protocols/validation';
+import { useEffect } from 'react';
 
-export function Login() {
+type Props = {
+  validation: Validation;
+};
+
+export function Login({ validation }: Props) {
+  if (validation) {
+    // TODO: REMOVER
+    // existe só pra fazer o Typescript parar de reclamar
+  }
+
   const loginForm = useForm({
     defaultState: {
       errors: { email: 'campo obrigatório', password: 'campo obrigatório' },
     },
   });
+
+  useEffect(() => {
+    validation?.validate({
+      email: loginForm.values['email'],
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loginForm.values['email']]);
 
   return (
     <div className={Styles.login}>
