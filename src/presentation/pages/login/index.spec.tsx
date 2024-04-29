@@ -156,4 +156,26 @@ describe('Login', () => {
 
     expect(submitButton.disabled).toBe(false);
   });
+
+  test('should show loading spinner on submit', async () => {
+    const { sut, user } = makeSut();
+    const emailInput = sut.getByRole<HTMLInputElement>('textbox', {
+      name: 'E-mail',
+    });
+    const passwordInput =
+      sut.getByPlaceholderText<HTMLInputElement>('Digite sua senha');
+    const submitButton = sut.getByRole<HTMLButtonElement>('button', {
+      name: 'Entrar',
+    });
+
+    await user.type(emailInput, faker.internet.email());
+    await user.type(passwordInput, faker.internet.password());
+    await user.click(submitButton);
+
+    const loadingSpinnerComponent = await sut.findByTestId(
+      'form-status-loading',
+    );
+
+    expect(loadingSpinnerComponent).not.toBeNull();
+  });
 });
