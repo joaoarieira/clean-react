@@ -1,7 +1,7 @@
 import { Login } from '@/presentation/pages/login';
 import { AuthenticationSpy, ValidationSpy } from '@/presentation/test';
 import { faker } from '@faker-js/faker';
-import { Screen, render, screen } from '@testing-library/react';
+import { Screen, fireEvent, render, screen } from '@testing-library/react';
 import userEvent, { UserEvent } from '@testing-library/user-event';
 
 type MakeSutArgs = {
@@ -250,5 +250,19 @@ describe('Login', () => {
     await user.click(submitButton); // clica denovo
 
     expect(authenticationSpy.callsCount).toBe(1);
+  });
+
+  test('should not call Authentication if form is invalid', async () => {
+    const { sut, user, authenticationSpy } = makeSut({
+      validationError: faker.lorem.sentence(),
+    });
+
+    await populateEmailField({ sut, user });
+
+    const form = await sut.findByRole<HTMLFormElement>('form');
+
+    fireEvent.submit(form, { name: 'login' });
+
+    expect(authenticationSpy.callsCount).toBe(0);
   });
 });
