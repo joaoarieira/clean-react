@@ -1,8 +1,8 @@
 import { Login } from '@/presentation/pages/login';
 import { AuthenticationSpy, ValidationSpy } from '@/presentation/test';
 import { faker } from '@faker-js/faker';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { Screen, render, screen } from '@testing-library/react';
+import userEvent, { UserEvent } from '@testing-library/user-event';
 
 type MakeSutArgs = {
   /**
@@ -11,6 +11,33 @@ type MakeSutArgs = {
    * `undefined`: sem mensagem de erro.
    */
   validationError?: string;
+};
+
+type PopulateEmailFieldArgs = {
+  sut: Screen;
+  user: UserEvent;
+  email?: string;
+};
+
+type PopulatePasswordFieldArgs = {
+  sut: Screen;
+  user: UserEvent;
+  password?: string;
+};
+
+type SimulateValidSubmitArgs = PopulateEmailFieldArgs & {
+  password?: string;
+};
+
+type AssertStatusForFieldArgs = {
+  sut: Screen;
+  fieldName: string;
+  /**
+   * `string`: mensagem de erro esperada.
+   *
+   * `undefined`: sem mensagem de erro.
+   */
+  errorMessage?: string;
 };
 
 const makeSut = (args?: MakeSutArgs) => {
@@ -29,6 +56,52 @@ const makeSut = (args?: MakeSutArgs) => {
     validationSpy,
     authenticationSpy,
   };
+};
+
+const populateEmailField = async ({
+  sut,
+  user,
+  email = faker.internet.email(),
+}: PopulateEmailFieldArgs) => {
+  const emailInput = sut.getByRole<HTMLInputElement>('textbox', {
+    name: 'E-mail',
+  });
+  await user.type(emailInput, email);
+};
+
+const populatePasswordField = async ({
+  sut,
+  user,
+  password = faker.internet.password(),
+}: PopulatePasswordFieldArgs) => {
+  const passwordInput =
+    sut.getByPlaceholderText<HTMLInputElement>('Digite sua senha');
+  await user.type(passwordInput, password);
+};
+
+const expectStatusForField = ({
+  sut,
+  fieldName,
+  errorMessage,
+}: AssertStatusForFieldArgs) => {
+  const fieldStatus = sut.getByTestId<HTMLSpanElement>(`${fieldName}-status`);
+  expect(fieldStatus.title).toBe(errorMessage ?? 'Tudo certo!');
+  expect(fieldStatus.textContent).toBe(errorMessage ? '🔴' : '🟢');
+};
+
+const simulateValidSubmit = async ({
+  sut,
+  user,
+  email = faker.internet.email(),
+  password = faker.internet.password(),
+}: SimulateValidSubmitArgs) => {
+  const submitButton = sut.getByRole<HTMLButtonElement>('button', {
+    name: 'Entrar',
+  });
+
+  await populateEmailField({ sut, user, email });
+  await populatePasswordField({ sut, user, password });
+  await user.click(submitButton);
 };
 
 describe('Login', () => {
@@ -59,122 +132,92 @@ describe('Login', () => {
     const { sut, validationSpy } = makeSut({
       validationError: faker.lorem.sentence(),
     });
-    const statusComponent = sut.getByTestId<HTMLSpanElement>('email-status');
 
-    expect(statusComponent.textContent).toBe('🔴');
-    expect(statusComponent.title).toBe(validationSpy.errorMessage);
+    expectStatusForField({
+      sut,
+      fieldName: 'email',
+      errorMessage: validationSpy.errorMessage,
+    });
   });
 
   test('should call Validation with correct email', async () => {
     const { sut, user, validationSpy } = makeSut();
-    const emailInput = sut.getByRole<HTMLInputElement>('textbox', {
-      name: 'E-mail',
-    });
-    const emailValue = faker.internet.email();
+    const email = faker.internet.email();
 
-    await user.type(emailInput, emailValue);
+    await populateEmailField({ sut, user, email });
 
-    expect(validationSpy.fieldValue).toEqual(emailValue);
+    expect(validationSpy.fieldValue).toEqual(email);
   });
 
   test('should call Validation with correct password', async () => {
     const { sut, user, validationSpy } = makeSut();
-    const passwordInput =
-      sut.getByPlaceholderText<HTMLInputElement>('Digite sua senha');
-    const passwordValue = faker.internet.password();
+    const password = faker.internet.password();
 
-    await user.type(passwordInput, passwordValue);
+    await populatePasswordField({ sut, user, password });
 
-    expect(validationSpy.fieldValue).toEqual(passwordValue);
+    expect(validationSpy.fieldValue).toEqual(password);
   });
 
   test('should show email error if Validation fails', async () => {
     const { sut, validationSpy, user } = makeSut({
       validationError: faker.lorem.sentence(),
     });
-    const emailInput = sut.getByRole<HTMLInputElement>('textbox', {
-      name: 'E-mail',
+
+    await populateEmailField({ sut, user });
+
+    expectStatusForField({
+      sut,
+      fieldName: 'email',
+      errorMessage: validationSpy.errorMessage,
     });
-
-    await user.type(emailInput, faker.internet.email());
-    const emailStatus = await sut.findByTestId<HTMLSpanElement>('email-status');
-
-    expect(emailStatus.title).toBe(validationSpy.errorMessage);
-    expect(emailStatus.textContent).toBe('🔴');
   });
 
   test('should show password error if Validation fails', async () => {
     const { sut, validationSpy, user } = makeSut({
       validationError: faker.lorem.sentence(),
     });
-    const passwordInput =
-      sut.getByPlaceholderText<HTMLInputElement>('Digite sua senha');
 
-    await user.type(passwordInput, faker.internet.password());
-    const passwordStatus =
-      await sut.findByTestId<HTMLSpanElement>('password-status');
+    await populatePasswordField({ sut, user });
 
-    expect(passwordStatus.title).toBe(validationSpy.errorMessage);
-    expect(passwordStatus.textContent).toBe('🔴');
+    expectStatusForField({
+      sut,
+      fieldName: 'password',
+      errorMessage: validationSpy.errorMessage,
+    });
   });
 
   test('should show email success if Validation succeeds', async () => {
     const { sut, user } = makeSut();
-    const emailInput = sut.getByRole<HTMLInputElement>('textbox', {
-      name: 'E-mail',
-    });
 
-    await user.type(emailInput, faker.internet.email());
-    const emailStatus = await sut.findByTestId<HTMLSpanElement>('email-status');
+    await populateEmailField({ sut, user });
 
-    expect(emailStatus.title).toBe('Tudo certo!');
-    expect(emailStatus.textContent).toBe('🟢');
+    expectStatusForField({ sut, fieldName: 'email' });
   });
 
   test('should show password success if Validation succeeds', async () => {
     const { sut, user } = makeSut();
-    const passwordInput =
-      sut.getByPlaceholderText<HTMLInputElement>('Digite sua senha');
 
-    await user.type(passwordInput, faker.internet.password());
-    const passwordStatus =
-      await sut.findByTestId<HTMLSpanElement>('password-status');
+    await populatePasswordField({ sut, user });
 
-    expect(passwordStatus.title).toBe('Tudo certo!');
-    expect(passwordStatus.textContent).toBe('🟢');
+    expectStatusForField({ sut, fieldName: 'password' });
   });
 
   test('should enable the submit button if credentials are valid', async () => {
     const { sut, user } = makeSut();
-    const emailInput = sut.getByRole<HTMLInputElement>('textbox', {
-      name: 'E-mail',
-    });
-    const passwordInput =
-      sut.getByPlaceholderText<HTMLInputElement>('Digite sua senha');
     const submitButton = sut.getByRole<HTMLButtonElement>('button', {
       name: 'Entrar',
     });
 
-    await user.type(emailInput, faker.internet.email());
-    await user.type(passwordInput, faker.internet.password());
+    await populateEmailField({ sut, user });
+    await populatePasswordField({ sut, user });
 
     expect(submitButton.disabled).toBe(false);
   });
 
   test('should show loading spinner on submit', async () => {
     const { sut, user } = makeSut();
-    const emailInput = sut.getByRole<HTMLInputElement>('textbox', {
-      name: 'E-mail',
-    });
-    const passwordInput =
-      sut.getByPlaceholderText<HTMLInputElement>('Digite sua senha');
-    const submitButton = sut.getByRole<HTMLButtonElement>('button', {
-      name: 'Entrar',
-    });
 
-    await user.type(emailInput, faker.internet.email());
-    await user.type(passwordInput, faker.internet.password());
-    await user.click(submitButton);
+    await simulateValidSubmit({ sut, user });
 
     const loadingSpinnerComponent = await sut.findByTestId(
       'form-status-loading',
@@ -185,24 +228,14 @@ describe('Login', () => {
 
   test('should call Authentication with correct values', async () => {
     const { sut, user, authenticationSpy } = makeSut();
-    const emailInput = sut.getByRole<HTMLInputElement>('textbox', {
-      name: 'E-mail',
-    });
-    const passwordInput =
-      sut.getByPlaceholderText<HTMLInputElement>('Digite sua senha');
-    const submitButton = sut.getByRole<HTMLButtonElement>('button', {
-      name: 'Entrar',
-    });
-    const emailValue = faker.internet.email();
-    const passwordValue = faker.internet.password();
+    const email = faker.internet.email();
+    const password = faker.internet.password();
 
-    await user.type(emailInput, emailValue);
-    await user.type(passwordInput, passwordValue);
-    await user.click(submitButton);
+    await simulateValidSubmit({ sut, user, email, password });
 
     expect(authenticationSpy.args).toEqual({
-      email: emailValue,
-      password: passwordValue,
+      email,
+      password,
     });
   });
 });
