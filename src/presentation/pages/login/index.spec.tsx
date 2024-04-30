@@ -256,11 +256,9 @@ describe('Login', () => {
     const { sut, user, authenticationSpy } = makeSut({
       validationError: faker.lorem.sentence(),
     });
-
-    await populateEmailField({ sut, user });
-
     const form = await sut.findByRole<HTMLFormElement>('form');
 
+    await populateEmailField({ sut, user });
     fireEvent.submit(form, { name: 'login' });
 
     expect(authenticationSpy.callsCount).toBe(0);
