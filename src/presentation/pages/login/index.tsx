@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { FormContextProvider } from '@/presentation/contexts/form/form-context';
 import Styles from './styles.module.scss';
 import {
@@ -28,10 +29,13 @@ export function Login({ validation, authentication }: Props) {
   const isPasswordErroed = loginForm.getIsFieldErroed('password');
   const isSubmitDisabled = isEmailErroed || isPasswordErroed;
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (loginForm.isLoading) {
+      return;
+    }
     loginForm.setIsLoading(true);
-    void authentication.auth({
+    await authentication.auth({
       email: loginForm.values.email as string,
       password: loginForm.values.password as string,
     });
