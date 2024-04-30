@@ -1,8 +1,5 @@
-import { AccountModel } from '@/domain/models';
-import { mockAccountModel } from '@/domain/test';
-import { Authentication, AuthenticationArgs } from '@/domain/usecases';
 import { Login } from '@/presentation/pages/login';
-import { ValidationSpy } from '@/presentation/test/mock-validation';
+import { AuthenticationSpy, ValidationSpy } from '@/presentation/test';
 import { faker } from '@faker-js/faker';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -15,16 +12,6 @@ type MakeSutArgs = {
    */
   validationError?: string;
 };
-
-class AuthenticationSpy implements Authentication {
-  accountModel = mockAccountModel();
-  args?: AuthenticationArgs;
-
-  auth(args: AuthenticationArgs): Promise<AccountModel> {
-    this.args = args;
-    return Promise.resolve(this.accountModel);
-  }
-}
 
 const makeSut = (args?: MakeSutArgs) => {
   const validationSpy = new ValidationSpy();
