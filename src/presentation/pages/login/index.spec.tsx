@@ -102,6 +102,10 @@ const simulateValidSubmit = async ({
   await populateEmailField({ sut, user, email });
   await populatePasswordField({ sut, user, password });
   await user.click(submitButton);
+
+  return {
+    submitButton,
+  };
 };
 
 describe('Login', () => {
@@ -237,5 +241,14 @@ describe('Login', () => {
       email,
       password,
     });
+  });
+
+  test('should call Authentication only once', async () => {
+    const { sut, user, authenticationSpy } = makeSut();
+    const { submitButton } = await simulateValidSubmit({ sut, user });
+
+    await user.click(submitButton); // clica denovo
+
+    expect(authenticationSpy.callsCount).toBe(1);
   });
 });
