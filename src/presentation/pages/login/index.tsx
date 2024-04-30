@@ -31,7 +31,10 @@ export function Login({ validation, authentication }: Props) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (loginForm.isLoading) {
+    const isEmailErroed = loginForm.getIsFieldErroed('email');
+    const isPasswordErroed = loginForm.getIsFieldErroed('password');
+
+    if (loginForm.isLoading || isEmailErroed || isPasswordErroed) {
       return;
     }
     loginForm.setIsLoading(true);
@@ -64,7 +67,7 @@ export function Login({ validation, authentication }: Props) {
       <LoginHeader />
 
       <FormContextProvider {...loginForm}>
-        <form className={Styles.form} onSubmit={handleSubmit}>
+        <form className={Styles.form} name="login" onSubmit={handleSubmit}>
           <h2>Login</h2>
 
           <Input
