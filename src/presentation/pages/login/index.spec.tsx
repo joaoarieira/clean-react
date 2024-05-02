@@ -5,6 +5,7 @@ import { faker } from '@faker-js/faker';
 import { Screen, fireEvent, render, screen } from '@testing-library/react';
 import userEvent, { UserEvent } from '@testing-library/user-event';
 import 'jest-localstorage-mock';
+import { BrowserRouter } from 'react-router-dom';
 
 type MakeSutArgs = {
   /**
@@ -49,6 +50,7 @@ const makeSut = (args?: MakeSutArgs) => {
   const user = userEvent.setup();
   const renderResult = render(
     <Login validation={validationSpy} authentication={authenticationSpy} />,
+    { wrapper: BrowserRouter },
   );
 
   return {

@@ -12,6 +12,7 @@ import { Validation } from '@/presentation/protocols/validation';
 import { useEffect } from 'react';
 import { Authentication } from '@/domain/usecases';
 import { InvalidCredentialsError } from '@/domain/errors';
+import { Link } from 'react-router-dom';
 
 type Props = {
   validation: Validation;
@@ -103,7 +104,9 @@ export function Login({ validation, authentication }: Props) {
             Entrar
           </button>
 
-          <span className={Styles['new-account']}>Criar conta</span>
+          <Link to="/signup" className={Styles['new-account']}>
+            Criar conta
+          </Link>
 
           <FormStatus />
         </form>
