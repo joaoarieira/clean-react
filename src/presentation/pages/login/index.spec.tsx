@@ -4,6 +4,7 @@ import { AuthenticationSpy, ValidationSpy } from '@/presentation/test';
 import { faker } from '@faker-js/faker';
 import { Screen, fireEvent, render, screen } from '@testing-library/react';
 import userEvent, { UserEvent } from '@testing-library/user-event';
+import 'jest-localstorage-mock';
 
 type MakeSutArgs = {
   /**
@@ -110,6 +111,10 @@ const simulateValidSubmit = async ({
 };
 
 describe('Login', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   test('should not show error message when mounting', () => {
     const { sut } = makeSut();
     const errorMessageComponent = sut.queryByTestId('form-status-error');
@@ -282,5 +287,14 @@ describe('Login', () => {
       `${fieldName}: ${errorException.message}`,
     );
     expect(loadingSpinnerComponent).toBeNull();
+  });
+
+  test('should add accessToken to localStorage on success', async () => {
+    const { sut, user, authenticationSpy } = makeSut();
+    await simulateValidSubmit({ sut, user });
+    expect(localStorage.setItem).toHaveBeenCalledWith(
+      'accessToken',
+      authenticationSpy.accountModel.accessToken,
+    );
   });
 });
