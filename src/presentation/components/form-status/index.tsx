@@ -17,7 +17,7 @@ export function FormStatus() {
       {errorEntries.length && (
         <ul className={Styles.error} data-testid="form-status-error">
           {errorEntries.map(([fieldName, fieldError]) => (
-            <li key={fieldName}>
+            <li key={fieldName} data-testid={`form-status-error-${fieldName}`}>
               {fieldName}: {fieldError}
             </li>
           ))}

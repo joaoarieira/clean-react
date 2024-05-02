@@ -11,6 +11,7 @@ import { useForm } from '@/presentation/contexts/form/use-form';
 import { Validation } from '@/presentation/protocols/validation';
 import { useEffect } from 'react';
 import { Authentication } from '@/domain/usecases';
+import { InvalidCredentialsError } from '@/domain/errors';
 
 type Props = {
   validation: Validation;
@@ -37,11 +38,20 @@ export function Login({ validation, authentication }: Props) {
     if (loginForm.isLoading || isEmailErroed || isPasswordErroed) {
       return;
     }
+
     loginForm.setIsLoading(true);
-    await authentication.auth({
-      email: loginForm.values.email as string,
-      password: loginForm.values.password as string,
-    });
+
+    try {
+      await authentication.auth({
+        email: loginForm.values.email as string,
+        password: loginForm.values.password as string,
+      });
+    } catch (error) {
+      if (error instanceof InvalidCredentialsError) {
+        loginForm.setFieldErrorMessage('erro', error.message);
+      }
+      loginForm.setIsLoading(false);
+    }
   };
 
   useEffect(() => {
