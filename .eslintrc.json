@@ -30,7 +30,8 @@
   "overrides": [
     {
       "files": [
-        "*.spec.ts"
+        "*.spec.ts",
+        "*.spec.tsx"
       ],
       "plugins": [
         "jest"
