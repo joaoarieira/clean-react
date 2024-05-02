@@ -293,7 +293,9 @@ describe('Login', () => {
 
   test('should add accessToken to localStorage on success', async () => {
     const { sut, user, authenticationSpy } = makeSut();
+
     await simulateValidSubmit({ sut, user });
+
     expect(localStorage.setItem).toHaveBeenCalledWith(
       'accessToken',
       authenticationSpy.accountModel.accessToken,
