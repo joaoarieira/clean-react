@@ -42,10 +42,11 @@ export function Login({ validation, authentication }: Props) {
     loginForm.setIsLoading(true);
 
     try {
-      await authentication.auth({
+      const account = await authentication.auth({
         email: loginForm.values.email as string,
         password: loginForm.values.password as string,
       });
+      localStorage.setItem('accessToken', account.accessToken);
     } catch (error) {
       if (error instanceof InvalidCredentialsError) {
         loginForm.setFieldErrorMessage('erro', error.message);
