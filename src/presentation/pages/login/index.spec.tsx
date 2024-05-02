@@ -1,3 +1,4 @@
+import { InvalidCredentialsError } from '@/domain/errors';
 import { Login } from '@/presentation/pages/login';
 import { AuthenticationSpy, ValidationSpy } from '@/presentation/test';
 import { faker } from '@faker-js/faker';
@@ -262,5 +263,24 @@ describe('Login', () => {
     fireEvent.submit(form, { name: 'login' });
 
     expect(authenticationSpy.callsCount).toBe(0);
+  });
+
+  test('should show error and hide spinner if Authentication fails', async () => {
+    const { sut, user, authenticationSpy } = makeSut();
+    const errorException = new InvalidCredentialsError();
+    jest.spyOn(authenticationSpy, 'auth').mockRejectedValueOnce(errorException);
+
+    await simulateValidSubmit({ sut, user });
+
+    const fieldName = 'erro';
+    const errorMessageComponent = await sut.findByTestId<HTMLLIElement>(
+      'form-status-error-' + fieldName,
+    );
+    const loadingSpinnerComponent = sut.queryByTestId('form-status-loading');
+
+    expect(errorMessageComponent.textContent).toBe(
+      `${fieldName}: ${errorException.message}`,
+    );
+    expect(loadingSpinnerComponent).toBeNull();
   });
 });
