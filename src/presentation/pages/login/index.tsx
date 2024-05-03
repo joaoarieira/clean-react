@@ -59,7 +59,7 @@ export function Login({ validation, authentication }: Props) {
   useEffect(() => {
     const emailErrorOrUndefined = validation.validate(
       'email',
-      loginForm.values['email'],
+      loginForm.values['email'] as string,
     );
     loginForm.setFieldErrorMessage('email', emailErrorOrUndefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,7 +68,7 @@ export function Login({ validation, authentication }: Props) {
   useEffect(() => {
     const passwordErrorOrUndefined = validation?.validate(
       'password',
-      loginForm.values['password'],
+      loginForm.values['password'] as string,
     );
     loginForm.setFieldErrorMessage('password', passwordErrorOrUndefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps

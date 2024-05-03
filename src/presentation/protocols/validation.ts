@@ -1,3 +1,3 @@
 export interface Validation {
-  validate(fieldName: string, fieldValue: unknown): string | undefined;
+  validate(fieldName: string, fieldValue: string): string | undefined;
 }
