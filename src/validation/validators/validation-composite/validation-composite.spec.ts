@@ -1,19 +1,34 @@
 import { FieldValidationSpy } from '@/validation/validators/test/mock-field-validation';
 import { ValidationComposite } from '@/validation/validators/validation-composite/validation-composite';
+import { faker } from '@faker-js/faker';
+
+const makeSut = () => {
+  const fieldValidationsSpy = [
+    new FieldValidationSpy('any_field'),
+    new FieldValidationSpy('any_field'),
+  ];
+  const sut = new ValidationComposite(fieldValidationsSpy);
+  return { sut, fieldValidationsSpy };
+};
+
+const populateErrorMessages = (fieldValidationsSpy: FieldValidationSpy[]) => {
+  const errorMessages = fieldValidationsSpy.map(
+    () => new Error(faker.lorem.sentence()),
+  );
+  fieldValidationsSpy.forEach((fieldValidationSpy, index) => {
+    fieldValidationSpy.error = errorMessages[index];
+  });
+  return errorMessages;
+};
 
 describe('ValidationComposite', () => {
   test('should return error if any validation fails', () => {
-    const fieldValidationSpy1 = new FieldValidationSpy('any_field');
-    const fieldValidationSpy2 = new FieldValidationSpy('any_field');
-    fieldValidationSpy1.error = new Error('first_error_message');
-    fieldValidationSpy2.error = new Error('second_error_message');
-    const sut = new ValidationComposite([
-      fieldValidationSpy1,
-      fieldValidationSpy2,
-    ]);
+    const { sut, fieldValidationsSpy } = makeSut();
+    const errorMessages = populateErrorMessages(fieldValidationsSpy);
+    const firstErrorMessage = errorMessages[0].message;
 
-    const error = sut.validate('any_field', 'any_value');
+    const validationErrorMessage = sut.validate('any_field', 'any_value');
 
-    expect(error).toBe('first_error_message');
+    expect(validationErrorMessage).toBe(firstErrorMessage);
   });
 });
