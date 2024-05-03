@@ -32,4 +32,13 @@ describe('ValidationComposite', () => {
 
     expect(validationErrorMessage).toBe(firstErrorMessage);
   });
+
+  test('should return falsy if all validations succeeds', () => {
+    const fieldName = faker.lorem.word();
+    const { sut } = makeSut(fieldName);
+
+    const validationErrorMessage = sut.validate(fieldName, faker.lorem.word());
+
+    expect(validationErrorMessage).toBeFalsy();
+  });
 });
