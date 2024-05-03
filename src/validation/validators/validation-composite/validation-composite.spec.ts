@@ -2,10 +2,10 @@ import { FieldValidationSpy } from '@/validation/validators/test/mock-field-vali
 import { ValidationComposite } from '@/validation/validators/validation-composite/validation-composite';
 import { faker } from '@faker-js/faker';
 
-const makeSut = () => {
+const makeSut = (fieldName: string) => {
   const fieldValidationsSpy = [
-    new FieldValidationSpy('any_field'),
-    new FieldValidationSpy('any_field'),
+    new FieldValidationSpy(fieldName),
+    new FieldValidationSpy(fieldName),
   ];
   const sut = new ValidationComposite(fieldValidationsSpy);
   return { sut, fieldValidationsSpy };
@@ -23,11 +23,12 @@ const populateErrorMessages = (fieldValidationsSpy: FieldValidationSpy[]) => {
 
 describe('ValidationComposite', () => {
   test('should return error if any validation fails', () => {
-    const { sut, fieldValidationsSpy } = makeSut();
+    const fieldName = faker.lorem.word();
+    const { sut, fieldValidationsSpy } = makeSut(fieldName);
     const errorMessages = populateErrorMessages(fieldValidationsSpy);
     const firstErrorMessage = errorMessages[0].message;
 
-    const validationErrorMessage = sut.validate('any_field', 'any_value');
+    const validationErrorMessage = sut.validate(fieldName, faker.lorem.word());
 
     expect(validationErrorMessage).toBe(firstErrorMessage);
   });
