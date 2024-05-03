@@ -14,7 +14,7 @@ export function FormStatus() {
         <Spinner className={Styles.spinner} data-testid="form-status-loading" />
       )}
 
-      {errorEntries.length && (
+      {!!errorEntries.length && (
         <ul className={Styles.error} data-testid="form-status-error">
           {errorEntries.map(([fieldName, fieldError]) => (
             <li key={fieldName} data-testid={`form-status-error-${fieldName}`}>
