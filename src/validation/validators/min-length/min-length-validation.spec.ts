@@ -11,8 +11,9 @@ function makeSut() {
 describe('MinLengthValidation', () => {
   test('should return error if value is invalid', () => {
     const { sut, minLength } = makeSut();
+    const maxLength = minLength > 0 ? minLength : 0;
     const wordShorterThanMinLength = faker.string.alphanumeric({
-      length: { min: 0, max: minLength - 1 },
+      length: { min: 0, max: maxLength },
     });
 
     const error = sut.validate(wordShorterThanMinLength);
