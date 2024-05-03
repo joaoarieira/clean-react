@@ -2,16 +2,30 @@ import {
   ValidationBuilder as sut,
   RequiredFieldValidation,
   EmailValidation,
+  MinLengthValidation,
 } from '@/validation/validators';
+import { faker } from '@faker-js/faker';
 
 describe('ValidationBuilder', () => {
   test('should return RequiredFieldValidation', () => {
-    const validations = sut.field('any_field').required().build();
-    expect(validations).toEqual([new RequiredFieldValidation('any_field')]);
+    const fieldName = faker.lorem.word();
+    const validations = sut.field(fieldName).required().build();
+    expect(validations).toEqual([new RequiredFieldValidation(fieldName)]);
   });
 
   test('should return EmailValidation', () => {
-    const validations = sut.field('any_field').email().build();
-    expect(validations).toEqual([new EmailValidation('any_field')]);
+    const fieldName = faker.lorem.word();
+    const validations = sut.field(fieldName).email().build();
+    expect(validations).toEqual([new EmailValidation(fieldName)]);
+  });
+
+  test('should return MinLengthValidation', () => {
+    const fieldName = faker.lorem.word();
+    const minLength = faker.number.int({ max: 4000 }); // max arbitrário
+    const validations = sut.field(fieldName).minLength(minLength).build();
+
+    expect(validations).toEqual([
+      new MinLengthValidation(fieldName, minLength),
+    ]);
   });
 });
