@@ -1,5 +1,5 @@
 import { InvalidFieldError } from '@/validation/errors';
-import { EmailValidation } from '@/validation/validators/email/email-validation';
+import { EmailValidation } from '@/validation/validators';
 import { faker } from '@faker-js/faker';
 
 const makeSut = () => {
