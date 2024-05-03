@@ -47,7 +47,7 @@ export function useForm(props?: UseFormProps): UseFormReturn {
           if (oldState.errors) {
             delete oldState.errors[name];
           }
-          return oldState;
+          return { ...oldState, errors: { ...oldState.errors } };
         }
         const newState = {
           ...oldState,
