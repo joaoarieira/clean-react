@@ -1,8 +1,9 @@
 import { AxiosHttpClient } from '@/infra/http/axios-http-client/axios-http-client';
 
 export const makeAxiosHttpClient = <
-  TRequestBody = unknown,
-  TResponseBody = unknown,
+  TRequestData = unknown,
+  TResponseData = unknown,
+  TResponseErrorData = unknown,
 >() => {
-  return new AxiosHttpClient<TRequestBody, TResponseBody>();
+  return new AxiosHttpClient<TRequestData, TResponseData, TResponseErrorData>();
 };

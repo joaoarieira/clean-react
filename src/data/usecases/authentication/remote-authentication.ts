@@ -15,10 +15,10 @@ export class RemoteAuthentication {
   async auth(args: AuthenticationArgs): Promise<AccountModel> {
     const httpResponse = await this.httpPostClient.post({
       url: this.url,
-      body: args,
+      data: args,
     });
 
-    switch (httpResponse.statusCode) {
+    switch (httpResponse.status) {
       case HttpStatusCode.ok: {
         break;
       }
@@ -29,6 +29,6 @@ export class RemoteAuthentication {
         throw new UnexpectedError();
     }
 
-    return httpResponse.body!;
+    return httpResponse.data as AccountModel;
   }
 }

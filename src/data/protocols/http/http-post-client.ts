@@ -1,13 +1,16 @@
 import { HttpResponse } from '@/data/protocols/http';
 
-export type HttpPostArgs<TBody = unknown> = {
+export type HttpPostArgs<TData = unknown> = {
   url: string;
-  body?: TBody;
+  data?: TData;
 };
 
 export interface HttpPostClient<
-  TRequestBody = unknown,
-  TResponseBody = unknown,
+  TRequestData = unknown,
+  TResponseData = unknown,
+  TResponseErrorData = unknown,
 > {
-  post(args: HttpPostArgs<TRequestBody>): Promise<HttpResponse<TResponseBody>>;
+  post(
+    args: HttpPostArgs<TRequestData | TResponseErrorData>,
+  ): Promise<HttpResponse<TResponseData | TResponseErrorData>>;
 }

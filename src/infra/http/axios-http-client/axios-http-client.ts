@@ -5,18 +5,26 @@ import {
 } from '@/data/protocols/http';
 import axios from 'axios';
 
-export class AxiosHttpClient<TRequestBody = unknown, TResponseBody = unknown>
-  implements HttpPostClient<TRequestBody, TResponseBody>
+export class AxiosHttpClient<
+  TRequestData = unknown,
+  TResponseData = unknown,
+  TResponseErrorData = unknown,
+> implements HttpPostClient<TRequestData, TResponseData, TResponseErrorData>
 {
   async post({
     url,
-    body,
-  }: HttpPostArgs<TRequestBody>): Promise<HttpResponse<TResponseBody>> {
-    const axiosResponse = await axios.post<TResponseBody>(url, body);
+    data,
+  }: HttpPostArgs<TRequestData>): Promise<
+    HttpResponse<TResponseData | TResponseErrorData>
+  > {
+    const axiosResponse = await axios.post<TResponseData | TResponseErrorData>(
+      url,
+      data,
+    );
 
     return {
-      statusCode: axiosResponse.status,
-      body: axiosResponse.data,
+      status: axiosResponse.status,
+      data: axiosResponse.data,
     };
   }
 }

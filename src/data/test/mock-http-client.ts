@@ -5,19 +5,24 @@ import {
   HttpPostArgs,
 } from '@/data/protocols/http';
 
-export class HttpPostClientSpy<TRequestBody = unknown, TResponseBody = unknown>
-  implements HttpPostClient<TRequestBody, TResponseBody>
+export class HttpPostClientSpy<
+  TRequestData = unknown,
+  TResponseData = unknown,
+  TResponseErrorData = unknown,
+> implements HttpPostClient<TRequestData, TResponseData, TResponseErrorData>
 {
   url?: string;
-  body?: TRequestBody;
-  response: HttpResponse<TResponseBody> = {
-    statusCode: HttpStatusCode.ok,
+  body?: TRequestData;
+  response: HttpResponse<TResponseData | TResponseErrorData> = {
+    status: HttpStatusCode.ok,
   };
 
   async post({
     url,
-    body,
-  }: HttpPostArgs<TRequestBody>): Promise<HttpResponse<TResponseBody>> {
+    data: body,
+  }: HttpPostArgs<TRequestData>): Promise<
+    HttpResponse<TResponseData | TResponseErrorData>
+  > {
     this.url = url;
     this.body = body;
     return Promise.resolve(this.response);

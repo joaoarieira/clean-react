@@ -19,18 +19,15 @@ describe('AxiosHttpClient', () => {
     const { sut, mockedAxios } = makeSut();
     const request = makePostRequestArgs();
     await sut.post(request);
-    expect(mockedAxios.post).toHaveBeenCalledWith(request.url, request.body);
+    expect(mockedAxios.post).toHaveBeenCalledWith(request.url, request.data);
   });
 
-  test('should return the correct statusCode and body', async () => {
+  test('should return the correct statusCode and body on success', () => {
     const { sut, mockedAxios } = makeSut();
-    const httpResponse = await sut.post(makePostRequestArgs());
-    const axiosResponse = (await mockedAxios.post.mock.results[0]
-      .value) as AxiosResponse<unknown>;
+    const httpResponse = sut.post(makePostRequestArgs());
+    const axiosResponse = mockedAxios.post.mock.results[0]
+      .value as AxiosResponse<unknown>;
 
-    expect(httpResponse).toEqual({
-      statusCode: axiosResponse.status,
-      body: axiosResponse.data,
-    });
+    expect(httpResponse).toEqual(axiosResponse);
   });
 });
