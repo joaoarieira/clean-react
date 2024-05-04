@@ -3,7 +3,7 @@ import {
   HttpPostClient,
   HttpResponse,
 } from '@/data/protocols/http';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export class AxiosHttpClient<
   TRequestData = unknown,
@@ -17,14 +17,21 @@ export class AxiosHttpClient<
   }: HttpPostArgs<TRequestData>): Promise<
     HttpResponse<TResponseData | TResponseErrorData>
   > {
-    const axiosResponse = await axios.post<TResponseData | TResponseErrorData>(
-      url,
-      data,
-    );
-
-    return {
-      status: axiosResponse.status,
-      data: axiosResponse.data,
-    };
+    return axios
+      .post<TResponseData>(url, data)
+      .then(
+        (response): HttpResponse<TResponseData> => ({
+          status: response.status,
+          data: response.data,
+        }),
+      )
+      .catch(
+        (
+          error: AxiosError<TResponseErrorData>,
+        ): HttpResponse<TResponseErrorData> => ({
+          status: error.response?.status ?? 500,
+          data: error.response?.data,
+        }),
+      );
   }
 }
