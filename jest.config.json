@@ -3,7 +3,11 @@
   "preset": "ts-jest",
   "testEnvironment": "jsdom",
   "collectCoverageFrom": [
-    "<rootDir>/src/**/*.{ts,tsx}"
+    "<rootDir>/src/**/*.{ts,tsx}",
+    "!<rootDir>/src/main/index.tsx",
+    "!<rootDir>/src/domain/models/index.ts",
+    "!<rootDir>/src/domain/usecases/index.ts",
+    "!<rootDir>/src/validation/test/index.ts"
   ],
   "coverageDirectory": "coverage",
   "transform": {
